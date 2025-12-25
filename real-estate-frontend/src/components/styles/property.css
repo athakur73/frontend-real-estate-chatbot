@@ -1,0 +1,67 @@
+.property-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.property-card {
+  border: 1px solid #e3e3e3;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+  transition: transform .15s ease;
+}
+
+.property-card:hover {
+  transform: translateY(-2px);
+}
+
+.property-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+
+.property-body {
+  padding: 10px 12px;
+}
+
+.property-title {
+  font-size: 16px;
+  margin: 0 0 6px;
+}
+
+.property-meta {
+  margin: 2px 0;
+  color: #444;
+  font-size: 14px;
+}
+
+.amenities {
+  margin-top: 8px;
+  padding-left: 18px;
+  font-size: 13px;
+  color: #333;
+}
+
+.save-btn {
+  margin-top: 10px;
+  width: 100%;
+  border-radius: 6px;
+  border: none;
+  padding: 8px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+}
+
+.save-btn:hover {
+  background: #1e4fcf;
+}
+
+.no-results {
+  text-align: center;
+  color: #777;
+}
