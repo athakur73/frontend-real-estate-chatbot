@@ -1,4 +1,6 @@
-const API_BASE = "http://localhost:8001";
+// const API_BASE = "http://localhost:8000";
+const API_BASE = "http://real-estate-chatbot-amits-projects-d5f8f55e.vercel.app";
+
 
 /**
  * Send chat message to backend
