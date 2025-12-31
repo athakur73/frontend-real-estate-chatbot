@@ -6,7 +6,7 @@ const API_BASE = "/api";
  * Send chat message to backend
  */
 export async function sendMessage(message, sessionId) {
-  const response = await fetch(`${API_BASE}/chat`, {
+  const res = await fetch(`${API_BASE}/chat`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -17,18 +17,19 @@ export async function sendMessage(message, sessionId) {
     })
   });
 
-  if (!response.ok) {
-    throw new Error("Failed to send message");
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text || "Failed to send message");
   }
 
-  return response.json();
+  return res.json();
 }
 
 /**
  * Save property to MongoDB
  */
 export async function saveProperty(propertyId, sessionId) {
-  const response = await fetch(`${API_BASE}/save`, {
+  const res = await fetch(`${API_BASE}/save`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -39,9 +40,10 @@ export async function saveProperty(propertyId, sessionId) {
     })
   });
 
-  if (!response.ok) {
-    throw new Error("Failed to save property");
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text || "Failed to save property");
   }
 
-  return response.json();
+  return res.json();
 }
