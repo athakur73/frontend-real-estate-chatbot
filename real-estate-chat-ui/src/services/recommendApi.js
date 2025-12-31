@@ -1,5 +1,6 @@
+const API_BASE = "/api";
 export async function getRecommendations(payload) {
-  const response = await fetch("http://98.81.182.8:8000/recommend", {
+  const res = await fetch('${API_BASE}/recommend', {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
