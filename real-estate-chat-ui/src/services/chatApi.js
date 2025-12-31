@@ -1,6 +1,6 @@
-const API_BASE = "http://98.81.182.8:8000";
+// const API_BASE = "http://98.81.182.8:8000";
 // const API_BASE = "https://real-estate-chatbot-shrv.onrender.com/";
-
+const API_BASE = "/api";
 
 /**
  * Send chat message to backend
