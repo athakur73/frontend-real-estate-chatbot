@@ -1,4 +1,4 @@
-const API_BASE = "/api";
+const API_BASE = "/backend";
 
 export async function getRecommendations(payload) {
   const res = await fetch(`${API_BASE}/recommend`, {
