@@ -1,101 +1,82 @@
-import { useState } from "react";
-import MessageList from "./components/MessageList";
-import PropertyList from "./components/PropertyList";
-import ChatBox from "./components/ChatBox";
-import { sendMessage } from "./services/chatApi";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import ChatPage from "./pages/ChatPage";
+import RecommendPage from "./pages/RecommendPage";
+import logo from "./logo.png";
 
 function App() {
-  const [messages, setMessages] = useState([]);
-  const [properties, setProperties] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [sessionId] = useState(() => crypto.randomUUID());
-
-  const handleSend = async (text) => {
-    setMessages((prev) => [...prev, { sender: "user", text }]);
-    setLoading(true);
-
-    try {
-      const response = await sendMessage(text, sessionId);
-
-      setMessages((prev) => [
-        ...prev,
-        { sender: "bot", text: response.reply }
-      ]);
-
-      setProperties(response.properties || []);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
-    <div
-      style={{
-        height: "100vh",
-        background:
-          "linear-gradient(180deg, #F8FAFC 0%, #EEF2FF 100%)" // 👈 subtle AI gradient
-      }}
-    >
-      {/* Header */}
-      <header
-        style={{
-          height: 60,
-          background: "#FFFFFF",
-          borderBottom: "1px solid #E5E7EB",
-          display: "flex",
-          alignItems: "center",
-          padding: "0 28px",
-          fontSize: 16,
-          fontWeight: 600,
-          color: "#0F172A"
-        }}
-      >
-        <span style={{ color: "#2563EB", marginRight: 8 }}>◆</span>
-        Agent Mira
-        <span style={{ marginLeft: 10, color: "#64748B", fontWeight: 400 }}>
-          AI Real Estate Assistant
-        </span>
-      </header>
-
-      {/* Main */}
+    <Router>
       <div
         style={{
-          display: "flex",
-          height: "calc(100vh - 60px)"
+          height: "100vh",
+          background:
+            "linear-gradient(180deg, #F8FAFC 0%, #EEF2FF 100%)"
         }}
       >
-        {/* Chat Panel */}
-        <aside
+        {/* HEADER */}
+        <header
           style={{
-            width: 360,
-            background: "#FAFAFB",
-            borderRight: "1px solid #E5E7EB",
+            height: 60,
+            background: "#FFFFFF",
+            borderBottom: "1px solid #E5E7EB",
             display: "flex",
-            flexDirection: "column"
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "0 28px"
           }}
         >
-          <MessageList messages={messages} loading={loading} />
-          <ChatBox onSend={handleSend} disabled={loading} />
-        </aside>
+          {/* LOGO */}
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <img src={logo} alt="Logo" style={{ height: 32 }} />
+            <div>
+              <div style={{ fontSize: 16, fontWeight: 600 }}>
+                Agent Mira
+              </div>
+              <div style={{ fontSize: 12, color: "#64748B" }}>
+                AI Real Estate Assistant
+              </div>
+            </div>
+          </div>
 
-        {/* Results Panel */}
-        <main
+          {/* NAV */}
+          <nav style={{ display: "flex", gap: 16 }}>
+            <Link to="/" style={navLink}>Chat</Link>
+            <Link to="/recommend" style={navLink}>Recommendations</Link>
+          </nav>
+        </header>
+
+        {/* PAGE CONTENT */}
+        <div
           style={{
-            flex: 1,
-            padding: 32,
-            overflowY: "auto",
-            background:
-              "linear-gradient(180deg, #F1F5F9 0%, #EDE9FE 100%)" // 👈 very light tint
+            height: "calc(100vh - 60px)",
+            padding: "0 clamp(16px, 4vw, 32px)"
           }}
         >
-          <PropertyList
-            properties={properties}
-            sessionId={sessionId}
-          />
-        </main>
+          {/* 🔴 FIX: DO NOT CENTER THIS */}
+          <div
+            style={{
+              maxWidth: 1280,
+              marginLeft: 0,
+              marginRight: "auto",
+              height: "100%"
+            }}
+          >
+            <Routes>
+              <Route path="/" element={<ChatPage />} />
+              <Route path="/recommend" element={<RecommendPage />} />
+            </Routes>
+          </div>
+        </div>
       </div>
-    </div>
+    </Router>
   );
 }
+
+const navLink = {
+  textDecoration: "none",
+  fontSize: 14,
+  fontWeight: 600,
+  color: "#4F46E5"
+};
 
 export default App;
