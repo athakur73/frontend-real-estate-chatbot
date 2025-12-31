@@ -1,5 +1,5 @@
 export async function getRecommendations(payload) {
-  const response = await fetch("api/recommend", {
+  const response = await fetch("http://98.81.182.8:8000/recommend", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
