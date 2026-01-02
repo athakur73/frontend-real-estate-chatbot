@@ -3,7 +3,6 @@
     {
       "source": "/backend/(.*)",
       "destination": "http://98.81.182.8:8000/$1"
-      
     }
   ]
 }
