@@ -3,12 +3,15 @@ import MessageList from "../components/MessageList";
 import PropertyList from "../components/PropertyList";
 import ChatBox from "../components/ChatBox";
 import { sendMessage } from "../services/chatApi";
+import { getSessionId } from "../utils/session";
 
 function ChatPage() {
   const [messages, setMessages] = useState([]);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [sessionId] = useState(() => crypto.randomUUID());
+
+  // ✅ ONE STABLE SESSION ID
+  const sessionId = getSessionId();
 
   const handleSend = async (text) => {
     setMessages((prev) => [...prev, { sender: "user", text }]);
@@ -34,7 +37,7 @@ function ChatPage() {
         display: "flex",
         width: "100%",
         height: "100%",
-        justifyContent: "flex-start",   // 🔒 LEFT LOCK
+        justifyContent: "flex-start",
         alignItems: "stretch",
         background: "#F8FAFC"
       }}
@@ -49,7 +52,7 @@ function ChatPage() {
           borderRight: "1px solid #E5E7EB",
           display: "flex",
           flexDirection: "column",
-          alignItems: "flex-start"      // 🔒 LEFT LOCK
+          alignItems: "flex-start"
         }}
       >
         <MessageList messages={messages} loading={loading} />

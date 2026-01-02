@@ -1,11 +1,18 @@
 import { useState } from "react";
+import { saveProperty } from "../services/chatApi";
+import { getSessionId } from "../utils/session";
 
 function PropertyCard({ property }) {
   const [expanded, setExpanded] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   if (!property) return null;
 
+  const sessionId = getSessionId();
+
   const {
+    id,
     title,
     location,
     image_url,
@@ -18,6 +25,20 @@ function PropertyCard({ property }) {
     price
   } = property;
 
+  const handleSave = async () => {
+    if (saving || saved) return;
+
+    try {
+      setSaving(true);
+      await saveProperty(id, sessionId);
+      setSaved(true);
+    } catch (err) {
+      alert("Failed to save property");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <div
       style={{
@@ -25,7 +46,8 @@ function PropertyCard({ property }) {
         borderRadius: 14,
         overflow: "hidden",
         boxShadow: "0 10px 28px rgba(0,0,0,0.08)",
-        border: "1px solid #E5E7EB"
+        border: "1px solid #E5E7EB",
+        position: "relative"
       }}
     >
       {/* ================= IMAGE ================= */}
@@ -41,7 +63,7 @@ function PropertyCard({ property }) {
             }}
           />
 
-          {/* ===== PRICE BADGE (TOP RIGHT) ===== */}
+          {/* ===== PRICE BADGE ===== */}
           {price !== undefined && (
             <div
               style={{
@@ -54,29 +76,51 @@ function PropertyCard({ property }) {
                 borderRadius: 999,
                 fontSize: 15,
                 fontWeight: 700,
-                letterSpacing: 0.2,
                 boxShadow: "0 6px 16px rgba(0,0,0,0.35)"
               }}
             >
               ${price.toLocaleString()}
             </div>
           )}
+
+          {/* ===== SAVE BUTTON ===== */}
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            title={saved ? "Saved" : "Save property"}
+            style={{
+              position: "absolute",
+              top: 12,
+              left: 12,
+              background: "#FFFFFF",
+              borderRadius: "50%",
+              width: 40,
+              height: 40,
+              border: "1px solid #E5E7EB",
+              cursor: saved ? "default" : "pointer",
+              fontSize: 18,
+              color: saved ? "#16A34A" : "#EF4444",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.25)"
+            }}
+          >
+            {saved ? "✔" : "♡"}
+          </button>
         </div>
       )}
 
       {/* ================= CONTENT ================= */}
       <div style={{ padding: 20 }}>
-        {/* TITLE */}
         <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}>
           {title}
         </div>
 
-        {/* LOCATION */}
         <div style={{ fontSize: 13, color: "#64748B", marginBottom: 10 }}>
           📍 {location}
         </div>
 
-        {/* SPECS */}
         <div
           style={{
             display: "flex",
@@ -91,7 +135,6 @@ function PropertyCard({ property }) {
           <span>{size_sqft} sqft</span>
         </div>
 
-        {/* AMENITIES */}
         {amenities?.length > 0 && (
           <div
             style={{
@@ -117,7 +160,6 @@ function PropertyCard({ property }) {
           </div>
         )}
 
-        {/* TOGGLE */}
         {(score_breakdown || reasons) && (
           <button
             onClick={() => setExpanded((v) => !v)}
@@ -135,7 +177,6 @@ function PropertyCard({ property }) {
           </button>
         )}
 
-        {/* EXPANDED */}
         {expanded && (
           <div
             style={{
@@ -144,7 +185,6 @@ function PropertyCard({ property }) {
               borderTop: "1px solid #E5E7EB"
             }}
           >
-            {/* SCORE BREAKDOWN */}
             {score_breakdown && (
               <div style={{ marginBottom: 16 }}>
                 <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 10 }}>
@@ -191,7 +231,6 @@ function PropertyCard({ property }) {
               </div>
             )}
 
-            {/* REASONS */}
             {reasons?.length > 0 && (
               <div>
                 <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 6 }}>
