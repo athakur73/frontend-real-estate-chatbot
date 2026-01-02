@@ -1,5 +1,5 @@
-// const API_BASE = "/backend";
-const API_BASE = "http://localhost:8000";
+const API_BASE = "/backend";
+// const API_BASE = "http://localhost:8000";
 
 export async function getRecommendations(payload) {
   const res = await fetch(`${API_BASE}/recommend`, {
