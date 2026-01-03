@@ -1,6 +1,11 @@
 import PropertyCard from "./PropertyCard";
+import { saveProperty } from "../services/chatApi";
 
-function PropertyList({ properties = [] }) {
+function PropertyList({ properties = [], sessionId }) {
+  if (!properties.length) {
+    return <p>No properties found.</p>;
+  }
+
   return (
     <div
       style={{
@@ -9,8 +14,14 @@ function PropertyList({ properties = [] }) {
         gap: 24
       }}
     >
-      {properties.map((p) => (
-        <PropertyCard key={p.id} property={p} />
+      {properties.map((property) => (
+        <PropertyCard
+          key={property.id}                 // ✅ always use property.id
+          property={property}
+          onSave={() =>
+            saveProperty(property.id, sessionId) // ✅ send STRING id
+          }
+        />
       ))}
     </div>
   );
