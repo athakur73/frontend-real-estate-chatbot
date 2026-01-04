@@ -22,7 +22,8 @@ function PropertyCard({ property }) {
     amenities,
     score_breakdown,
     reasons,
-    price
+    price,                 // Listed price
+    ml_estimated_price     // ML-estimated price (from model)
   } = property;
 
   const handleSave = async () => {
@@ -63,7 +64,7 @@ function PropertyCard({ property }) {
             }}
           />
 
-          {/* ===== PRICE BADGE ===== */}
+          {/* ===== LISTED PRICE ===== */}
           {price !== undefined && (
             <div
               style={{
@@ -80,6 +81,26 @@ function PropertyCard({ property }) {
               }}
             >
               ${price.toLocaleString()}
+            </div>
+          )}
+
+          {/* ===== ML ESTIMATED PRICE ===== */}
+          {ml_estimated_price !== undefined && (
+            <div
+              style={{
+                position: "absolute",
+                top: 52,
+                right: 12,
+                background: "#2563EB",
+                color: "#FFFFFF",
+                padding: "6px 12px",
+                borderRadius: 999,
+                fontSize: 12,
+                fontWeight: 600,
+                boxShadow: "0 4px 12px rgba(0,0,0,0.3)"
+              }}
+            >
+              ML Est. ${ml_estimated_price.toLocaleString()}
             </div>
           )}
 
@@ -231,21 +252,30 @@ function PropertyCard({ property }) {
               </div>
             )}
 
-            {reasons?.length > 0 && (
-              <div>
-                <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 6 }}>
-                  Why this property?
-                </div>
-
-                <ul style={{ fontSize: 13, paddingLeft: 18 }}>
-                  {reasons.map((r, i) => (
-                    <li key={i} style={{ marginBottom: 4 }}>
-                      {r}
-                    </li>
-                  ))}
-                </ul>
+            <div>
+              <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 6 }}>
+                Why this property?
               </div>
-            )}
+
+              <ul style={{ fontSize: 13, paddingLeft: 18 }}>
+                {reasons?.map((r, i) => (
+                  <li key={i} style={{ marginBottom: 4 }}>
+                    {r}
+                  </li>
+                ))}
+
+                {ml_estimated_price !== undefined && price !== undefined && (
+                  <li>
+                    ML-estimated value is{" "}
+                    {ml_estimated_price < price ? "below" : "above"} the listed
+                    price, indicating a{" "}
+                    {ml_estimated_price < price
+                      ? "potential value opportunity"
+                      : "premium valuation"}.
+                  </li>
+                )}
+              </ul>
+            </div>
           </div>
         )}
       </div>
