@@ -48,7 +48,6 @@ function App() {
           <img src={logo} alt="Logo" style={{ height: 32 }} />
           <div>
             <div style={{ fontSize: 16, fontWeight: 600 }}>
-              Agent Mira
             </div>
             <div style={{ fontSize: 12, color: "#64748B" }}>
               AI Real Estate Assistant

@@ -22,8 +22,9 @@ function PropertyCard({ property }) {
     amenities,
     score_breakdown,
     reasons,
-    price,                 // Listed price
-    ml_estimated_price     // ML-estimated price (from model)
+    listed_price,
+    estimated_price,
+    price_delta
   } = property;
 
   const handleSave = async () => {
@@ -33,7 +34,7 @@ function PropertyCard({ property }) {
       setSaving(true);
       await saveProperty(id, sessionId);
       setSaved(true);
-    } catch (err) {
+    } catch {
       alert("Failed to save property");
     } finally {
       setSaving(false);
@@ -64,43 +65,23 @@ function PropertyCard({ property }) {
             }}
           />
 
-          {/* ===== LISTED PRICE ===== */}
-          {price !== undefined && (
+          {/* ===== ML ESTIMATED PRICE ===== */}
+          {estimated_price !== undefined && (
             <div
               style={{
                 position: "absolute",
                 top: 12,
                 right: 12,
-                background: "#111827",
+                background: "#0F172A",
                 color: "#FFFFFF",
                 padding: "8px 14px",
                 borderRadius: 999,
-                fontSize: 15,
+                fontSize: 14,
                 fontWeight: 700,
                 boxShadow: "0 6px 16px rgba(0,0,0,0.35)"
               }}
             >
-              ${price.toLocaleString()}
-            </div>
-          )}
-
-          {/* ===== ML ESTIMATED PRICE ===== */}
-          {ml_estimated_price !== undefined && (
-            <div
-              style={{
-                position: "absolute",
-                top: 52,
-                right: 12,
-                background: "#2563EB",
-                color: "#FFFFFF",
-                padding: "6px 12px",
-                borderRadius: 999,
-                fontSize: 12,
-                fontWeight: 600,
-                boxShadow: "0 4px 12px rgba(0,0,0,0.3)"
-              }}
-            >
-              ML Est. ${ml_estimated_price.toLocaleString()}
+              🧠 ${estimated_price.toLocaleString()}
             </div>
           )}
 
@@ -138,9 +119,35 @@ function PropertyCard({ property }) {
           {title}
         </div>
 
-        <div style={{ fontSize: 13, color: "#64748B", marginBottom: 10 }}>
+        <div style={{ fontSize: 13, color: "#64748B", marginBottom: 6 }}>
           📍 {location}
         </div>
+
+        {/* ===== LISTED PRICE ===== */}
+        {listed_price !== undefined && (
+          <div
+            style={{
+              fontSize: 14,
+              fontWeight: 600,
+              marginBottom: 8,
+              color: "#334155"
+            }}
+          >
+            💰 Listed Price: ${listed_price.toLocaleString()}
+            {price_delta !== undefined && price_delta !== 0 && (
+              <span
+                style={{
+                  marginLeft: 8,
+                  color: price_delta < 0 ? "#16A34A" : "#DC2626",
+                  fontWeight: 700
+                }}
+              >
+                ({price_delta < 0 ? "Below" : "Above"} ML by $
+                {Math.abs(price_delta).toLocaleString()})
+              </span>
+            )}
+          </div>
+        )}
 
         <div
           style={{
@@ -252,30 +259,21 @@ function PropertyCard({ property }) {
               </div>
             )}
 
-            <div>
-              <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 6 }}>
-                Why this property?
+            {reasons?.length > 0 && (
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 6 }}>
+                  Why this property?
+                </div>
+
+                <ul style={{ fontSize: 13, paddingLeft: 18 }}>
+                  {reasons.map((r, i) => (
+                    <li key={i} style={{ marginBottom: 4 }}>
+                      {r}
+                    </li>
+                  ))}
+                </ul>
               </div>
-
-              <ul style={{ fontSize: 13, paddingLeft: 18 }}>
-                {reasons?.map((r, i) => (
-                  <li key={i} style={{ marginBottom: 4 }}>
-                    {r}
-                  </li>
-                ))}
-
-                {ml_estimated_price !== undefined && price !== undefined && (
-                  <li>
-                    ML-estimated value is{" "}
-                    {ml_estimated_price < price ? "below" : "above"} the listed
-                    price, indicating a{" "}
-                    {ml_estimated_price < price
-                      ? "potential value opportunity"
-                      : "premium valuation"}.
-                  </li>
-                )}
-              </ul>
-            </div>
+            )}
           </div>
         )}
       </div>
